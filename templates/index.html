@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kafka Messages</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        h1 {
+            font-weight: bold;
+            font-size: 5rem;
+        }
+        
+        p {
+            font-weight: bold;
+            font-size: 2rem;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('connect', function () {
+            console.log("Connected to server");
+        });
+
+        socket.on('new_message', function (data) {
+            updateMessage(data.message);
+        });
+
+        // Function to update the displayed message
+        function updateMessage(message) {
+            document.getElementById('message').innerText = message;
+        }
+
+        // Periodically check for updates from the server
+        setInterval(function () {
+            socket.emit('check_updates');
+        }, 100); // Update every 5 seconds (adjust as needed)
+    </script>
+</head>
+<body>
+    <h1>Recognition</h1>
+    <p id="message">{{ message }}</p>
+</body>
+</html>
